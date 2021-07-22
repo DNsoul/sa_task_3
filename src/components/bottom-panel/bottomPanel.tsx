@@ -1,7 +1,7 @@
 import {Icon, Layout, Button} from '@ui-kitten/components';
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import Todo from '../../stores/TaskListStore';
+import Todo from '../../stores/TodoStore';
 
 const Palette = () => (
     <Icon style={styles.icon} fill="#8F9BB3" name="color-palette-outline" />

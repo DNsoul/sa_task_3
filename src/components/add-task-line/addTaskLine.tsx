@@ -1,7 +1,7 @@
 import {Button, CheckBox, Icon, Input} from '@ui-kitten/components';
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import Todo from '../../stores/TaskListStore';
+import Todo from '../../stores/TodoStore';
 
 const AddTaskLine = () => {
     const [inState, setInState] = useState(false);

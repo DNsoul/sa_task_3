@@ -1,10 +1,11 @@
 import {Button, Icon} from '@ui-kitten/components';
+import {observer} from 'mobx-react';
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import Todo from '../../stores/TaskListStore';
+import ListTodo from '../../stores/ListTodoStore';
 
-function FAB() {
-    const {addTask} = Todo;
+const FAB = observer(() => {
+    const {addTodo} = ListTodo;
 
     return (
         <Button
@@ -12,10 +13,10 @@ function FAB() {
             accessoryLeft={(props: any) => (
                 <Icon {...props} name="plus-outline" />
             )}
-            onPress={() => addTask('132', '321')}
+            onPress={() => addTodo('132')}
         />
     );
-}
+});
 
 const styles = StyleSheet.create({
     button: {

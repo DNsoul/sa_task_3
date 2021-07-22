@@ -1,58 +1,42 @@
 import {observer} from 'mobx-react';
 import React from 'react';
 import {useEffect} from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import { ScrollView } from 'react-native';
+import {Button, Text, View} from 'react-native';
 import {SwipeListView} from 'react-native-swipe-list-view';
-import Todo from '../../stores/TaskListStore';
+import Todo from '../../stores/TodoStore';
 import AddTaskLine from '../add-task-line';
-import TaskItem from '../task-item';
+import TaskItemBack from '../task-item-back';
+import TaskItemFront from '../task-item-front';
 
-/*
 const TaskList = observer(() => {
-    const {tasks, loadTasks} = Todo;
-
-    useEffect(() => {
-        loadTasks();
-    }, []);
-
-    return (
-        <ScrollView>
-            {tasks.map((task, idx) => (
-                <TaskItem id={idx} task={task} key={idx} />
-            ))}
-            <AddTaskLine />
-        </ScrollView>
-    );
-});
-*/
-
-const TaskList = () => {
-    const {getTasks, loadTasks} = Todo;
+    const {getTasks, loadTasks, addTask} = Todo;
 
     useEffect(() => {
         loadTasks();
         console.log(getTasks);
     }, []);
 
-    const d = getTasks.map((t, i) => ({key: `${i}`, text: t.text}));
-
     return (
-        <SwipeListView
-            data={d}
-            renderItem={(data, rowMap) => (
-                <View>
-                    <Text>I am fin a SwipeListView</Text>
-                </View>
-            )}
-            renderHiddenItem={(data, rowMap) => (
-                <View>
-                    <Text>Left</Text>
-                    <Text>Right</Text>
-                </View>
-            )}
-            leftOpenValue={75}
-            rightOpenValue={-75}
-        />
+        <>
+            <SwipeListView
+                data={getTasks.map((task, i) => ({key: `${i}`, task}))}
+                renderItem={data => (
+                    <TaskItemFront
+                        id={Number(data.item.key)}
+                        task={data.item.task}
+                    />
+                )}
+                renderHiddenItem={(data, rowMap) => (
+                    <TaskItemBack rowMap={rowMap} id={Number(data.item.key)} />
+                )}
+                disableRightSwipe={true}
+                rightOpenValue={-80}
+                restSpeedThreshold={10}
+                tension={100}
+            />
+            <AddTaskLine />
+        </>
     );
-};
+});
 export default TaskList;

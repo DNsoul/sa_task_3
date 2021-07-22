@@ -5,6 +5,7 @@ import {SafeAreaView, StatusBar} from 'react-native';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
+import TodoListPage from './src/containers/todoListPage';
 import TodoPage from './src/containers/todoPage';
 
 const App = () => {
@@ -14,7 +15,7 @@ const App = () => {
             <ApplicationProvider {...eva} theme={eva.light}>
                 <SafeAreaView>
                     <StatusBar />
-                    <TodoPage />
+                    <TodoListPage />
                 </SafeAreaView>
             </ApplicationProvider>
         </>

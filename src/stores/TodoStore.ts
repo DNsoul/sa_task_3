@@ -1,4 +1,4 @@
-import {action, computed, makeAutoObservable, observable} from 'mobx';
+import {action, computed, makeObservable, observable} from 'mobx';
 
 export type TaskType = {
     checked: boolean;
@@ -7,11 +7,11 @@ export type TaskType = {
     time: string;
 };
 
-class TaskList {
-    tasks: TaskType[];
+class TodoStore {
+    tasks: TaskType[] = [];
 
     constructor() {
-        makeAutoObservable(this, {
+        makeObservable(this, {
             tasks: observable.deep,
             getTasks: computed,
             loadTasks: action.bound,
@@ -63,6 +63,6 @@ class TaskList {
         this.tasks = [];
     }
 }
-const Todo = new TaskList();
+const Todo = new TodoStore();
 
 export default Todo;
