@@ -12,7 +12,7 @@ class TodoStore {
 
     constructor() {
         makeObservable(this, {
-            tasks: observable.deep,
+            tasks: observable,
             getTasks: computed,
             loadTasks: action.bound,
             addTask: action.bound,
@@ -22,25 +22,8 @@ class TodoStore {
         this.tasks = [];
     }
 
-    loadTasks() {
-        this.tasks = [
-            {text: 'Задание 1', time: '12.25', checked: false, important: true},
-            {text: 'Задание 2', time: '12.25', checked: true, important: true},
-            {
-                text: 'Задание 3',
-                time: '12.25',
-                checked: false,
-                important: false,
-            },
-            {text: 'Задание 4', time: '12.25', checked: true, important: false},
-            {text: 'Задание 5', time: '12.25', checked: true, important: true},
-            {
-                text: 'Задание 6',
-                time: '12.25',
-                checked: false,
-                important: false,
-            },
-        ];
+    loadTasks(tasks: TaskType[]) {
+        this.tasks = tasks;
     }
 
     get getTasks() {

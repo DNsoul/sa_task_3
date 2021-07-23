@@ -3,37 +3,7 @@ import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import Todo from '../../stores/TodoStore';
 
-const AddTaskLine = () => {
-    const [inState, setInState] = useState(false);
-
-    return inState ? (
-        <InputLine setInState={setInState} />
-    ) : (
-        <ButtonLine setInState={setInState} />
-    );
-};
-
-const ButtonLine = ({setInState}: any) => {
-    return (
-        <View style={styles.content}>
-            <Button
-                style={styles.buttonLine}
-                appearance="ghost"
-                onPress={() => setInState(true)}
-                accessoryLeft={() => (
-                    <Icon
-                        style={styles.icon}
-                        fill="#3366FF"
-                        name="plus-outline"
-                    />
-                )}>
-                Добавить запись
-            </Button>
-        </View>
-    );
-};
-
-const InputLine = ({setInState}: any) => {
+const AddTaskBack = ({setInState}: any) => {
     const {addTask} = Todo;
 
     const [text, setText] = useState('');
@@ -49,7 +19,7 @@ const InputLine = ({setInState}: any) => {
                 today.toISOString().slice(5, 10),
             important,
         );
-        setInState(false);
+        setInState(true);
     };
 
     return (
@@ -73,7 +43,7 @@ const InputLine = ({setInState}: any) => {
             <Button
                 appearance="ghost"
                 onPress={() => {
-                    setInState(false);
+                    setInState(true);
                 }}
                 accessoryLeft={() => (
                     <Icon
@@ -86,6 +56,8 @@ const InputLine = ({setInState}: any) => {
         </View>
     );
 };
+
+export default AddTaskBack;
 
 const styles = StyleSheet.create({
     content: {
@@ -113,5 +85,3 @@ const styles = StyleSheet.create({
         width: '80%',
     },
 });
-
-export default AddTaskLine;

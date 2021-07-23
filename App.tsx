@@ -5,20 +5,20 @@ import {SafeAreaView, StatusBar} from 'react-native';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
-import TodoListPage from './src/containers/todoListPage';
-import TodoPage from './src/containers/todoPage';
+import MainNavigation from './src/navigation/MainNavigation';
+import {NavigationContainer} from '@react-navigation/native';
 
 const App = () => {
     return (
-        <>
+        <NavigationContainer>
             <IconRegistry icons={EvaIconsPack} />
             <ApplicationProvider {...eva} theme={eva.light}>
-                <SafeAreaView>
+                <SafeAreaView style={{flex:1}}>
                     <StatusBar />
-                    <TodoListPage />
+                    <MainNavigation />
                 </SafeAreaView>
             </ApplicationProvider>
-        </>
+        </NavigationContainer>
     );
 };
 

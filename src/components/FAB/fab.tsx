@@ -1,31 +1,43 @@
-import {Button, Icon} from '@ui-kitten/components';
+import {Button, Icon, Input} from '@ui-kitten/components';
 import {observer} from 'mobx-react';
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import ListTodo from '../../stores/ListTodoStore';
 
 const FAB = observer(() => {
     const {addTodo} = ListTodo;
 
     return (
-        <Button
-            style={styles.button}
-            accessoryLeft={(props: any) => (
-                <Icon {...props} name="plus-outline" />
-            )}
-            onPress={() => addTodo('132')}
-        />
+        <View style={styles.content}>
+            <Input style={styles.input} />
+            <Button
+                style={styles.button}
+                accessoryLeft={(props: any) => (
+                    <Icon {...props} name="plus-outline" />
+                )}
+                onPress={() => addTodo('132')}
+            />
+        </View>
     );
 });
 
 const styles = StyleSheet.create({
-    button: {
+    content: {
         position: 'absolute',
-        bottom: 20,
-        right: 20,
-        height: 60,
-        width: 60,
+        flexDirection: 'row',
+        alignItems: 'center',
+        bottom: 15,
+        right: 10,
+        justifyContent: 'center',
+        overflow: 'hidden',
+    },
+    input: {
+        width: '80%',
+    },
+    button: {
         borderRadius: 50,
+        width: 50,
+        height: 50,
     },
 });
 
