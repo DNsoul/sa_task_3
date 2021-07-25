@@ -21,7 +21,9 @@ const TodoItem = ({todo}: {todo: TodoType}) => {
         <TouchableOpacity
             activeOpacity={0.5}
             onLongPress={() => setDelToggle(true)}
-            onPress={() => nav.navigate('Todo', {id: todo.id})}
+            onPress={() =>
+                nav.navigate('Todo', {id: todo.id, title: todo.name})
+            }
             style={[
                 styles.content,
                 todo.tasks.length
@@ -75,15 +77,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 15,
-        paddingVertical: 15,
-        borderRadius: 20,
-        marginVertical: 5,
-        marginHorizontal: 5,
-        borderWidth: 0.1,
+        paddingVertical: 20,
+        borderBottomWidth: 0.2,
     },
     delContent: {
-        height: 50,
-        paddingHorizontal: 20,
+        paddingVertical: 14,
     },
     delButton: {
         flexDirection: 'row',

@@ -1,17 +1,11 @@
 import {observer} from 'mobx-react';
 import React from 'react';
-import {useEffect} from 'react';
-import {ScrollView, Text} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import ListTodo, {TodoType} from '../../stores/ListTodoStore';
-import Todo from '../../stores/TodoStore';
 import TodoItem from '../todo-item';
 
 const TodoList = observer(() => {
-    const {getTodos, filterType, isLoad} = ListTodo;
-    const {getTasks} = Todo;
-
-    useEffect(() => {}, [getTasks]);
+    const {getTodos, filterType} = ListTodo;
 
     const checkComplite = (todo: TodoType) => {
         if (todo.tasks.length === 0) {
@@ -22,12 +16,14 @@ const TodoList = observer(() => {
 
     const setFilter = (f: number) => {
         switch (f) {
-            case 1:
+            case 0:
                 return getTodos.filter(t => !checkComplite(t));
-            case 2:
+            case 1:
                 return getTodos.filter(t => checkComplite(t));
+            case 2:
+                return getTodos.filter(t => t.tasks.length !== undefined);
             default:
-                return getTodos.filter(_t => true);
+                return getTodos.slice();
         }
     };
 
@@ -36,7 +32,7 @@ const TodoList = observer(() => {
 
     return (
         <FlatList
-            data={setFilter(filterType).sort(setSort)}
+            data={setFilter(filterType.row).sort(setSort)}
             renderItem={({item}: {item: TodoType}) => (
                 <TodoItem todo={item} key={item.id} />
             )}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {SafeAreaView, StatusBar, Text} from 'react-native';
+import {SafeAreaView, StatusBar} from 'react-native';
 
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
@@ -20,7 +20,7 @@ const App = () => {
         if (currentAppState === 'active') {
             loadDataAsync().catch(() => {});
         } else {
-            saveData();
+            saveData().catch(() => {});
         }
     }, [currentAppState, loadDataAsync, saveData]);
 
