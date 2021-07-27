@@ -3,13 +3,13 @@ import {StyleSheet, View} from 'react-native';
 import Todo, {TaskType} from '../../stores/TodoStore';
 import {Text, CheckBox, Layout} from '@ui-kitten/components';
 
-const TaskItemFront = ({id, task}: {id: number; task: TaskType}) => {
+const TaskItemFront = ({idx, task}: {idx: number; task: TaskType}) => {
     const {toggleTask} = Todo;
 
     return (
-        <Layout level="2" style={styles.rowFront}>
+        <Layout key={task.id} level="2" style={styles.rowFront}>
             <CheckBox
-                onChange={() => toggleTask(id)}
+                onChange={() => toggleTask(idx)}
                 checked={task.checked}
                 style={styles.checkbox}
             />
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     },
     rowFront: {
         alignItems: 'center',
-        height: 'auto',
+        flex: 1,
         flexDirection: 'row',
         paddingHorizontal: 10,
         paddingVertical: 5,

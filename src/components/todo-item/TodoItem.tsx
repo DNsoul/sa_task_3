@@ -32,8 +32,8 @@ const TodoItem = ({todo}: {todo: TodoType}) => {
                         : styles.incompleteTodo
                     : styles.emptyTodo,
             ]}>
-            <Text>{todo.name}</Text>
-            <Text>
+            <Text style={styles.text}>{todo.name}</Text>
+            <Text style={styles.count}>
                 {checkCount(todo.tasks)}/{todo.tasks.length}
             </Text>
         </TouchableOpacity>
@@ -79,6 +79,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 20,
         borderBottomWidth: 0.2,
+    },
+    text: {
+        flex: 27,
+    },
+    count: {
+        flex: 2,
     },
     delContent: {
         paddingVertical: 14,

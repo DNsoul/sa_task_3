@@ -2,26 +2,25 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import Todo from '../../stores/TodoStore';
 import {Icon, Button} from '@ui-kitten/components';
+import { useEffect } from 'react';
 
 const Delete = () => (
     <Icon style={styles.icon} fill="white" name="trash-2-outline" />
 );
 
-
-const closeRow = (rowMap: any, rowKey: number) => {
-    if (rowMap[rowKey]) {
-        rowMap[rowKey].closeRow();
-    }
-};
-
-const TaskItemBack = ({id, rowMap}: {id: number; rowMap: any}) => {
+const TaskItemBack = ({id, closeRow}: {id: string; closeRow: Function}) => {
     const {delTask} = Todo;
 
+    useEffect(() => {
+        console.log(id);
+        console.log('---------------------------');
+    })
+
     return (
-        <View style={styles.rowBack}>
+        <View key={id} style={styles.rowBack}>
             <Button
                 onPress={() => {
-                    closeRow(rowMap, id);
+                    closeRow();
                     delTask(id);
                 }}
                 appearance="ghost"
@@ -45,4 +44,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default TaskItemBack;
+export default React.memo(TaskItemBack);

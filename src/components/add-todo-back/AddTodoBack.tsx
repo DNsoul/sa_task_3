@@ -22,8 +22,10 @@ const AddTodoBack = ({setInState}: any) => {
                 autoFocus
                 placeholder="Введите задачу..."
                 onSubmitEditing={enterTask}
+                maxLength={30}
             />
             <Button
+                style={styles.button}
                 appearance="ghost"
                 onPress={() => {
                     setInState(true);
@@ -49,19 +51,22 @@ const styles = StyleSheet.create({
         height: 'auto',
         width: '100%',
         flexDirection: 'row',
+        justifyContent: 'space-between',
         paddingHorizontal: 10,
         paddingVertical: 5,
     },
     icon: {
-        height: 25,
-        width: 25,
-        marginRight: 15,
+        height: 20,
+        width: 20,
     },
     buttonLine: {
         height: 50,
         width: '100%',
     },
     input: {
-        width: '80%',
+        flex: 19,
+    },
+    button: {
+        flex: 1,
     },
 });

@@ -1,6 +1,7 @@
 import {action, computed, makeObservable, observable} from 'mobx';
 
 export type TaskType = {
+    id: string;
     checked: boolean;
     important: boolean;
     text: string;
@@ -31,15 +32,19 @@ class TodoStore {
     }
 
     addTask(text: string, time: string, important: boolean) {
-        this.tasks.push({text, time, checked: false, important});
+        const id = '_' + Math.random().toString(36).substr(2, 9);
+        this.tasks.push({id, text, time, checked: false, important});
     }
 
-    delTask(id: number) {
-        this.tasks.splice(id, 1);
+    delTask(id: string) {
+        this.tasks = this.tasks.filter(t => t.id !== id);
     }
 
-    toggleTask(id: number) {
-        this.tasks[id] = {...this.tasks[id], checked: !this.tasks[id].checked};
+    toggleTask(idx: number) {
+        this.tasks[idx] = {
+            ...this.tasks[idx],
+            checked: !this.tasks[idx].checked,
+        };
     }
 
     clearTask() {
