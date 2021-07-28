@@ -1,6 +1,7 @@
 import {observer} from 'mobx-react';
 import React from 'react';
 import {useEffect} from 'react';
+import {StyleSheet} from 'react-native';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import Todo, {TaskType} from '../../stores/TodoStore';
 import TaskItemBack from '../task-item-back';
@@ -35,10 +36,17 @@ const TaskList = observer(({tasks}: {tasks: TaskType[]}) => {
             disableRightSwipe={true}
             rightOpenValue={-80}
             restSpeedThreshold={10}
-            tension={100}
+            tension={80}
             recalculateHiddenLayout={false}
+            swipeRowStyle={styles.row}
         />
     );
+});
+
+const styles = StyleSheet.create({
+    row: {
+        backgroundColor: '#FF8165',
+    },
 });
 
 export default TaskList;

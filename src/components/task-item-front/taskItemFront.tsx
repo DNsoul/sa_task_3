@@ -47,7 +47,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
         flexDirection: 'row',
-        paddingHorizontal: 10,
+        paddingLeft: 25,
+        paddingRight: 25,
         paddingVertical: 5,
     },
     important: {
@@ -65,5 +66,6 @@ const styles = StyleSheet.create({
 });
 
 export default React.memo(TaskItemFront, (prev, next) => {
+    console.log(prev.task === next.task);
     return prev.task === next.task;
 });

@@ -10,10 +10,6 @@ const AddTaskBack = ({setInState}: any) => {
     const [important, setImportant] = useState(false);
 
     const enterTask = () => {
-        if (!text.length) {
-            return;
-        }
-
         let today = new Date();
 
         addTask(

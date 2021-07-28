@@ -27,10 +27,11 @@ const TaskItemBack = ({id, closeRow}: {id: string; closeRow: Function}) => {
 const styles = StyleSheet.create({
     rowBack: {
         backgroundColor: '#FF8165',
-        height: '100%',
         flexDirection: 'row',
+        height: 50,
         justifyContent: 'flex-end',
         paddingRight: 15,
+        paddingTop: 0,
     },
     icon: {
         height: 32,
@@ -38,4 +39,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default React.memo(TaskItemBack);
+export default TaskItemBack;

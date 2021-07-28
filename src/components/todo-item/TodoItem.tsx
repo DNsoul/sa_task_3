@@ -78,7 +78,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 15,
         paddingVertical: 20,
-        borderBottomWidth: 0.2,
     },
     text: {
         flex: 27,
