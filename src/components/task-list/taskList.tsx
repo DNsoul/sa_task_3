@@ -35,10 +35,7 @@ const TaskList = observer(({tasks}: {tasks: TaskType[]}) => {
             disableRightSwipe={true}
             rightOpenValue={-80}
             restSpeedThreshold={10}
-            previewRowKey={'0'}
             tension={100}
-            previewOpenValue={-40}
-            previewOpenDelay={3000}
             recalculateHiddenLayout={false}
         />
     );

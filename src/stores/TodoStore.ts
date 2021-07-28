@@ -37,7 +37,8 @@ class TodoStore {
     }
 
     delTask(id: string) {
-        this.tasks = this.tasks.filter(t => t.id !== id);
+        const idx = this.tasks.findIndex(t => t.id === id);
+        this.tasks.splice(idx, 1);
     }
 
     toggleTask(idx: number) {

@@ -2,7 +2,6 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import Todo from '../../stores/TodoStore';
 import {Icon, Button} from '@ui-kitten/components';
-import { useEffect } from 'react';
 
 const Delete = () => (
     <Icon style={styles.icon} fill="white" name="trash-2-outline" />
@@ -10,11 +9,6 @@ const Delete = () => (
 
 const TaskItemBack = ({id, closeRow}: {id: string; closeRow: Function}) => {
     const {delTask} = Todo;
-
-    useEffect(() => {
-        console.log(id);
-        console.log('---------------------------');
-    })
 
     return (
         <View key={id} style={styles.rowBack}>
@@ -33,7 +27,7 @@ const TaskItemBack = ({id, closeRow}: {id: string; closeRow: Function}) => {
 const styles = StyleSheet.create({
     rowBack: {
         backgroundColor: '#FF8165',
-        flex: 1,
+        height: '100%',
         flexDirection: 'row',
         justifyContent: 'flex-end',
         paddingRight: 15,

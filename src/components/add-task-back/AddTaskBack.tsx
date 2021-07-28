@@ -1,6 +1,6 @@
 import {Button, CheckBox, Icon, Input} from '@ui-kitten/components';
 import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {NativeSyntheticEvent, StyleSheet, TextInputKeyPressEventData, View} from 'react-native';
 import Todo from '../../stores/TodoStore';
 
 const AddTaskBack = ({setInState}: any) => {
@@ -10,6 +10,10 @@ const AddTaskBack = ({setInState}: any) => {
     const [important, setImportant] = useState(false);
 
     const enterTask = () => {
+        if (!text.length) {
+            return;
+        }
+
         let today = new Date();
 
         addTask(
@@ -34,6 +38,7 @@ const AddTaskBack = ({setInState}: any) => {
             />
             <Input
                 onChangeText={setText}
+                value={text}
                 style={styles.input}
                 multiline={true}
                 autoFocus

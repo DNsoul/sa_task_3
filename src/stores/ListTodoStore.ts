@@ -51,6 +51,7 @@ class ListTodoStore {
     }
 
     get getTodos() {
+        console.log(this.todos);
         return this.todos;
     }
 
