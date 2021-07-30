@@ -1,5 +1,7 @@
 import React from 'react';
 
+import SplashScreen from 'react-native-splash-screen';
+
 import {SafeAreaView, StatusBar} from 'react-native';
 
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
@@ -12,17 +14,21 @@ import ListTodo from './src/stores/ListTodoStore';
 import {useAppState} from '@react-native-community/hooks';
 
 const App = () => {
-    const {loadDataAsync, saveData} = ListTodo;
+    const {loadLocal, saveLocal} = ListTodo;
 
     const currentAppState = useAppState();
 
     useEffect(() => {
+        SplashScreen.hide();
+    }, [ ]);
+
+    useEffect(() => {
         if (currentAppState === 'active') {
-            loadDataAsync().catch(() => {});
+            loadLocal();
         } else {
-            saveData().catch(() => {});
+            saveLocal();
         }
-    }, [currentAppState, loadDataAsync, saveData]);
+    }, [currentAppState, loadLocal, saveLocal]);
 
     return (
         <NavigationContainer>

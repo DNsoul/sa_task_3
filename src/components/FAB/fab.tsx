@@ -2,10 +2,14 @@ import {Button, Icon, Input} from '@ui-kitten/components';
 import {observer} from 'mobx-react';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import ListTodo from '../../stores/ListTodoStore';
+import API from '../../services/apiService';
 
 const FAB = observer(() => {
-    const {addTodo} = ListTodo;
+    const req = () => {
+        API.listCreate({name: 'qweqwe', is_closed: false, is_completed: false})
+            .then(d => console.log('data: ', d))
+            .catch(e => console.log('error: ', e));
+    };
 
     return (
         <View style={styles.content}>
@@ -15,7 +19,7 @@ const FAB = observer(() => {
                 accessoryLeft={(props: any) => (
                     <Icon {...props} name="plus-outline" />
                 )}
-                onPress={() => addTodo('132')}
+                onPress={() => req()}
             />
         </View>
     );

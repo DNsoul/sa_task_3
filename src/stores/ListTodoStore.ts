@@ -1,14 +1,9 @@
-import {
-    action,
-    makeObservable,
-    observable,
-    computed,
-    flow,
-    runInAction,
-} from 'mobx';
+import {action, makeObservable, observable, computed} from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TaskType} from './TodoStore';
 import {IndexPath} from '@ui-kitten/components';
+
+import API from '../services/apiService';
 
 export type TodoType = {
     id: string;
@@ -33,8 +28,9 @@ class ListTodoStore {
             getType: computed,
             getTodosById: action.bound,
             loadData: action.bound,
-            loadDataAsync: flow.bound,
-            saveData: flow.bound,
+            saveLocal: action.bound,
+            loadCloud: action.bound,
+            loadLocal: action.bound,
         });
         this.todos = [];
         this.filterType = new IndexPath(0);
@@ -42,12 +38,31 @@ class ListTodoStore {
     }
 
     addTodo(name: string) {
-        const id = '_' + Math.random().toString(36).substr(2, 9);
-        this.todos.push({id, name, tasks: []});
+        API.listCreate({
+            name,
+            is_closed: false,
+            is_completed: false,
+            count_tasks: 0,
+        })
+            .then(action('success', d => console.log(d)))
+            .catch(
+                action('error', (e: Error) => {
+                    const id = '-' + Math.random().toString().substr(2, 9);
+                    console.log(e.message.slice(-3));
+                    this.todos.push({id, name, tasks: []});
+                }),
+            );
     }
 
     delTodo(id: string) {
-        this.todos = this.todos.filter(t => t.id !== id);
+        API.listDelete(id)
+            .then(action('success', d => console.log(d)))
+            .catch(
+                action('error', (e: Error) => {
+                    console.log(e.message.slice(-3));
+                    this.todos = this.todos.filter(t => t.id !== id);
+                }),
+            );
     }
 
     get getTodos() {
@@ -75,21 +90,37 @@ class ListTodoStore {
         this.todos = todos;
     }
 
-    async loadDataAsync() {
+    loadCloud() {
+        API.listGetItems()
+            .then(
+                action('success', d => {
+                    this.todos = d;
+                }),
+            )
+            .catch(
+                action('error', e => {
+                    console.log(e);
+                }),
+            );
+    }
+
+    loadLocal() {
         AsyncStorage.getItem('@todos')
-            .then(d => {
-                runInAction(() => {
+            .then(
+                action('success', d => {
                     this.todos = JSON.parse(d ?? '[]');
                     this.filterType = new IndexPath(0);
                     this.isLoad = false;
-                });
-            })
-            .catch(err => {
-                throw err;
-            });
+                }),
+            )
+            .catch(
+                action('error', err => {
+                    throw err;
+                }),
+            );
     }
 
-    async saveData() {
+    saveLocal() {
         AsyncStorage.setItem('@todos', JSON.stringify(this.todos));
     }
 }
