@@ -1,15 +1,22 @@
 import {Button, Icon, Input} from '@ui-kitten/components';
 import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import ListTodo from '../../stores/ListTodoStore';
+import {View} from 'react-native';
 
-const AddTodoBack = ({setInState}: any) => {
-    const {addTodo} = ListTodo;
+import styles from './style';
 
+type SwitchLineTodoBackPropsType = {
+    action: Function;
+    setInState: Function;
+};
+
+const SwitchLineTodoBack = ({
+    action,
+    setInState,
+}: SwitchLineTodoBackPropsType) => {
     const [text, setText] = useState('');
 
     const enterTask = () => {
-        addTodo(text);
+        action(text);
         setInState(true);
     };
 
@@ -42,31 +49,4 @@ const AddTodoBack = ({setInState}: any) => {
     );
 };
 
-export default AddTodoBack;
-
-const styles = StyleSheet.create({
-    content: {
-        alignItems: 'center',
-        backgroundColor: 'white',
-        height: 'auto',
-        width: '100%',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-    },
-    icon: {
-        height: 20,
-        width: 20,
-    },
-    buttonLine: {
-        height: 50,
-        width: '100%',
-    },
-    input: {
-        flex: 19,
-    },
-    button: {
-        flex: 1,
-    },
-});
+export default SwitchLineTodoBack;

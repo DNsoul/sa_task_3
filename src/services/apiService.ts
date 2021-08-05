@@ -1,14 +1,30 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Todo} from '../stores/todo';
+
 class ApiService {
     url = 'https://academy2.smw.tom.ru/legotin-alexander/api2/';
 
-    acs = '$2y$10$np/eF6JYoCBgaM.Tat2ES.ifxHYEhXej7VyAGXV5mPij8dKCcL7PC';
-    reft = '$2y$10$WO.YyC9lK5mcILbybtnbAOkaM2nexEpfIKk/PYwdeVRtsWCVWYExO';
+    token = {
+        acs: '',
+        ref: '',
+    };
+
+    loadToken = async () => {
+        await AsyncStorage.getItem('@token').then(d => {
+            const data = JSON.parse(d ?? '');
+            this.token = data;
+        });
+    };
+
+    saveToken = () => {
+        AsyncStorage.setItem('@token', JSON.stringify(this.token));
+    };
 
     sendRequest = async (path: string, data: object = {}, method: string) => {
         const response = await fetch(this.url + path, {
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + this.acs,
+                Authorization: 'Bearer ' + this.token.acs,
             },
             method: method,
             body: method === 'post' ? JSON.stringify(data) : undefined,
@@ -38,45 +54,91 @@ class ApiService {
         return this.sendRequest(
             'user/refreshAccessToken',
             {
-                refresh_token: this.reft,
+                refresh_token: this.token.ref,
             },
             'post',
         );
     };
 
-    taskCreate = (data: {
-        name: string;
-        is_completed: boolean;
-        list_id: string;
-        urgency: number;
-    }) => {
-        return this.sendRequest('task/create', data, 'post');
+    taskCreate = async (name: string, list_id: string, important: boolean) => {
+        let data = {
+            attributes: {
+                name,
+                is_completed: false,
+                list_id,
+                urgency: important ? 2 : 1,
+            },
+        };
+
+        return await this.sendRequest('task/create', data, 'post')
+            .then(d => {
+                console.log(d);
+                const res = d.data.attributes;
+                return {
+                    id: res.id,
+                    checked: res.is_complete,
+                    text: res.name,
+                    time: res.created_at,
+                    important: res.urgency > 1,
+                };
+            })
+            .catch(e => {
+                return null;
+            });
     };
 
-    taskGetItems = () => {
-        return this.sendRequest('task/get-items', {}, 'get');
+    taskGetItems = (id: string) => {
+        return this.sendRequest('task/get-item/' + id, {}, 'get')
+            .then(d => {
+                console.log(d.data);
+            })
+            .catch(e => {
+                console.log(e);
+            });
     };
 
     taskDelete = (id: string) => {
         return this.sendRequest('task/delete/' + id, {}, 'delete');
     };
 
-    listGetItems = () => {
-        return this.sendRequest('list/get-items', {}, 'get');
+    listGetItems = async () => {
+        return await this.sendRequest('list/get-items', {}, 'get')
+            .then(d => {
+                let items = d.data.items;
+                items = items.map(i => ({id: i.id, name: i.name, tasks: []}));
+                return items;
+            })
+            .catch(e => {
+                console.log(e);
+                return [];
+            });
     };
 
-    listCreate = (data: {
-        name: string;
-        is_closed: boolean;
-        is_completed: boolean;
-        count_tasks: number;
-    }) => {
-        console.log(data);
-        return this.sendRequest('list/create', data, 'post');
+    listCreate = async (name: string) => {
+        const data = {
+            attributes: {name, is_closed: false, is_completed: false},
+        };
+
+        return await this.sendRequest('list/create', data, 'post')
+            .then(d => {
+                const {id} = d.data.attributes;
+                return {id, name, tasks: []};
+            })
+            .catch(e => {
+                console.log(e);
+                return null;
+            });
     };
 
-    listDelete = (id: string) => {
-        return this.sendRequest('list/delete/' + id, {}, 'delete');
+    listDelete = async (id: string) => {
+        return await this.sendRequest('list/delete/' + id, {}, 'delete')
+            .then(() => {
+                return true;
+            })
+            .catch(e => {
+                console.log(e);
+                return false;
+            });
     };
 }
 

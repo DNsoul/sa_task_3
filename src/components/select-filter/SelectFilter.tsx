@@ -1,25 +1,27 @@
 import React from 'react';
-import {Select, SelectItem} from '@ui-kitten/components';
-import ListTodo from '../../stores/ListTodoStore';
+import {IndexPath, Select, SelectItem} from '@ui-kitten/components';
 import {observer} from 'mobx-react';
 
-const SelectFilter = observer(() => {
-    const {setFilter, getType} = ListTodo;
+type SelectFilterPropsType = {
+    filter: number;
+    setFilter: Function;
+}
 
+const SelectFilter = ({filter, setFilter}: SelectFilterPropsType) => {
     const titles = ['Неисполненые', 'Исполненые', 'Все'];
 
     return (
         <Select
-            selectedIndex={getType}
+            selectedIndex={new IndexPath(filter)}
             onSelect={index => {
-                setFilter(index);
+                setFilter(index.row);
             }}
-            value={titles[getType.row]}>
+            value={titles[filter]}>
             <SelectItem title="Неисполненые" />
             <SelectItem title="Исполненые" />
             <SelectItem title="Все" />
         </Select>
     );
-});
+};
 
-export default SelectFilter;
+export default observer(SelectFilter);

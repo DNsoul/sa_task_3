@@ -1,43 +1,40 @@
-import {observer} from 'mobx-react';
 import React from 'react';
 import {FlatList} from 'react-native-gesture-handler';
-import ListTodo, {TodoType} from '../../stores/ListTodoStore';
+import {Todo} from '../../stores/todo';
 import TodoItem from '../todo-item';
 
-const TodoList = observer(() => {
-    const {getTodos, filterType} = ListTodo;
+type TodoListPropsType = {
+    todos: Todo[];
+    filter: number;
+    delTodo: Function;
+};
 
-    const checkComplite = (todo: TodoType) => {
-        if (todo.tasks.length === 0) {
-            return false;
-        }
-        return todo.tasks.filter(t => t.checked).length === todo.tasks.length;
-    };
-
-    const setFilter = (f: number) => {
-        switch (f) {
+const TodoList = ({todos, filter, delTodo}: TodoListPropsType) => {
+    const setFilter = () => {
+        switch (filter) {
             case 0:
-                return getTodos.filter(t => !checkComplite(t));
+                return todos.filter(t => t.getIsNotDone);
             case 1:
-                return getTodos.filter(t => checkComplite(t));
+                return todos.filter(t => t.getIsDone);
             case 2:
-                return getTodos.filter(t => t.tasks.length !== undefined);
+                return todos;
             default:
-                return getTodos.slice();
+                return todos;
         }
     };
 
-    const setSort = (a: TodoType, b: TodoType) =>
+    const setSort = (a: Todo, b: Todo) =>
         a.name === b.name ? 0 : a.name < b.name ? -1 : 1;
 
     return (
         <FlatList
-            data={setFilter(filterType.row).sort(setSort)}
-            renderItem={({item}: {item: TodoType}) => (
-                <TodoItem todo={item} key={item.id} />
+            data={setFilter().sort(setSort)}
+            renderItem={({item}: {item: Todo}) => (
+                <TodoItem todo={item} key={item.list_id} delTodo={delTodo} />
             )}
+            keyExtractor={(item, index) => index.toString()}
         />
     );
-});
+};
 
 export default TodoList;

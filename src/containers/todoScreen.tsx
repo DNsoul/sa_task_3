@@ -1,30 +1,40 @@
-import {useNavigation} from '@react-navigation/native';
-import {
-    Icon,
-    Layout,
-    TopNavigation,
-    TopNavigationAction,
-} from '@ui-kitten/components';
+import {Layout} from '@ui-kitten/components';
 import {observer} from 'mobx-react';
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
-import {BackButton} from 'react-router-native';
-import AddTaskBack from '../components/add-task-back';
-import AddTaskFront from '../components/add-task-front/AddTaskFront';
-import SwitchLine from '../components/switch-line';
+import {StyleSheet} from 'react-native';
+import {SwitchLine, SwitchLineTaskBack} from '../components/switch-lines';
 import TaskList from '../components/task-list';
-import ListTodo from '../stores/ListTodoStore';
+import {todoList} from '../stores/todo';
 
 const TodoScreen = observer(({route}: any) => {
-    const {getTodosById} = ListTodo;
-    const todo = getTodosById(route.params.id);
+    const {getTodoById} = todoList;
+
+    const id = route.params.id;
+
+    const todo = getTodoById(id);
+
+    const {getTasks, toggleTask, delTask, addTask} = todo;
 
     return (
-        <Layout style={{height: '100%'}} level="3">
-            <TaskList tasks={todo?.tasks || []} />
-            <SwitchLine FrontElem={AddTaskFront} BackElem={AddTaskBack} />
+        <Layout style={styles.area} level="3">
+            <TaskList
+                tasks={getTasks.slice()}
+                toggleTask={toggleTask}
+                delTask={delTask}
+            />
+            <SwitchLine
+                text="Добавить"
+                action={addTask}
+                BackElem={SwitchLineTaskBack}
+            />
         </Layout>
     );
+});
+
+const styles = StyleSheet.create({
+    area: {
+        height: '100%',
+    },
 });
 
 export default TodoScreen;

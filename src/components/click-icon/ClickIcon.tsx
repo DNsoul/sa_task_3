@@ -1,11 +1,14 @@
 import {Icon} from '@ui-kitten/components';
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
+import styles from './style';
 
-const ClickIcon = ({name, onPress}: {name: string; onPress: Function}) => {
+type ClickIconPropsType = {name: string; onPress: Function};
+
+const ClickIcon = ({name, onPress}: ClickIconPropsType) => {
     return (
         <TouchableOpacity onPress={() => onPress()}>
-            <Icon style={{height: 30, width: 30, margin: 10}} name={name} />
+            <Icon style={styles.icon} name={name} />
         </TouchableOpacity>
     );
 };

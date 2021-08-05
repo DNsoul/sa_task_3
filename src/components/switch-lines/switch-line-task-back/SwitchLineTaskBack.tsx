@@ -1,24 +1,22 @@
 import {Button, CheckBox, Icon, Input} from '@ui-kitten/components';
 import React, {useState} from 'react';
-import {NativeSyntheticEvent, StyleSheet, TextInputKeyPressEventData, View} from 'react-native';
-import Todo from '../../stores/TodoStore';
+import {View} from 'react-native';
+import styles from './style';
 
-const AddTaskBack = ({setInState}: any) => {
-    const {addTask} = Todo;
+type SwitchLineTaskBackPropsType = {
+    action: Function;
+    setInState: Function;
+};
 
+const SwitchLineTaskBack = ({
+    action,
+    setInState,
+}: SwitchLineTaskBackPropsType) => {
     const [text, setText] = useState('');
     const [important, setImportant] = useState(false);
 
     const enterTask = () => {
-        let today = new Date();
-
-        addTask(
-            text,
-            today.toTimeString().slice(0, 5) +
-                ' ' +
-                today.toISOString().slice(5, 10),
-            important,
-        );
+        action(text, important ? 2 : 1);
         setInState(true);
     };
 
@@ -58,31 +56,4 @@ const AddTaskBack = ({setInState}: any) => {
     );
 };
 
-export default AddTaskBack;
-
-const styles = StyleSheet.create({
-    content: {
-        alignItems: 'center',
-        backgroundColor: 'white',
-        height: 'auto',
-        width: '100%',
-        flexDirection: 'row',
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-    },
-    icon: {
-        height: 25,
-        width: 25,
-        marginRight: 15,
-    },
-    buttonLine: {
-        height: 50,
-        width: '100%',
-    },
-    checkBox: {
-        width: '10%',
-    },
-    input: {
-        width: '80%',
-    },
-});
+export default SwitchLineTaskBack;
