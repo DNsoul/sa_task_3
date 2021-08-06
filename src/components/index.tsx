@@ -10,7 +10,8 @@ import {EvaIconsPack} from '@ui-kitten/eva-icons';
 import {useAppState} from '@react-native-community/hooks';
 import {NavigationContainer} from '@react-navigation/native';
 import MainNavigation from '../navigation/MainNavigation';
-import {todoList} from '../stores/todo';
+import todoList from '../stores/todoList';
+import API from '../services/apiService';
 
 const Main = () => {
     const currentAppState = useAppState();
@@ -19,13 +20,17 @@ const Main = () => {
         SplashScreen.hide();
     }, []);
 
-    /*useEffect(() => {
+    useEffect( () => {
         if (currentAppState === 'active') {
-            todoList.load();
+            (async () => {
+                await API.loadToken();
+                await todoList.load();
+            })();
         } else {
+            API.saveToken();
             todoList.save();
         }
-    }, [currentAppState]);*/
+    }, [currentAppState]);
 
     return (
         <NavigationContainer>

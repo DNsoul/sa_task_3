@@ -27,7 +27,9 @@ const TaskItemFront = ({task, toggleTask}: TaskItemFrontPropsType) => {
                                 : styles.importantUncheck,
                         ]}
                     />
-                    <Text category="p2">{task.time}</Text>
+                    <Text category="p2">
+                        {task.time.slice(11, 16) + ' ' + task.time.slice(0, 10)}
+                    </Text>
                 </View>
                 <Text category="p1">{task.name}</Text>
             </View>

@@ -15,6 +15,5 @@ export default StyleSheet.create({
     },
     label: {
         fontWeight: 'bold',
-        color: 'white',
     },
 });

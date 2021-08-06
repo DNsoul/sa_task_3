@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Todo} from '../stores/todo';
 
 class ApiService {
     url = 'https://academy2.smw.tom.ru/legotin-alexander/api2/';
@@ -23,11 +22,14 @@ class ApiService {
     sendRequest = async (path: string, data: object = {}, method: string) => {
         const response = await fetch(this.url + path, {
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type':
+                    method === 'put'
+                        ? 'x-www-form-urlencoded'
+                        : 'application/json',
                 Authorization: 'Bearer ' + this.token.acs,
             },
             method: method,
-            body: method === 'post' ? JSON.stringify(data) : undefined,
+            body: method === 'get' ? undefined : JSON.stringify(data),
         });
 
         if (!response.ok) {
@@ -60,37 +62,47 @@ class ApiService {
         );
     };
 
-    taskCreate = async (name: string, list_id: string, important: boolean) => {
+    taskCreate = async (name: string, list_id: string, urgency: number) => {
         let data = {
             attributes: {
                 name,
                 is_completed: false,
                 list_id,
-                urgency: important ? 2 : 1,
+                urgency,
             },
         };
 
         return await this.sendRequest('task/create', data, 'post')
             .then(d => {
-                console.log(d);
-                const res = d.data.attributes;
-                return {
-                    id: res.id,
-                    checked: res.is_complete,
-                    text: res.name,
-                    time: res.created_at,
-                    important: res.urgency > 1,
-                };
+                return d.data.attributes.id;
             })
-            .catch(e => {
+            .catch(() => {
                 return null;
             });
     };
 
-    taskGetItems = (id: string) => {
-        return this.sendRequest('task/get-item/' + id, {}, 'get')
+    taskPutItems = (id: string, is_completed: boolean) => {
+        return this.sendRequest('task/update/' + id, {is_completed}, 'put')
             .then(d => {
-                console.log(d.data);
+                return true;
+            })
+            .catch(e => {
+                console.log(e);
+                return false;
+            });
+    };
+
+    taskGetItems = () => {
+        return this.sendRequest('task/', {}, 'get')
+            .then(d => {
+                return d.data.items.map(t => ({
+                    id: t.id,
+                    list_id: t.list_id,
+                    name: t.name,
+                    is_completed: t.is_completed,
+                    urgency: t.urgency,
+                    time: t.created_at,
+                }));
             })
             .catch(e => {
                 console.log(e);
@@ -98,19 +110,31 @@ class ApiService {
     };
 
     taskDelete = (id: string) => {
-        return this.sendRequest('task/delete/' + id, {}, 'delete');
+        return this.sendRequest('task/delete/' + id, {}, 'delete')
+            .then(() => {
+                return true;
+            })
+            .catch(() => {
+                return false;
+            });
     };
 
     listGetItems = async () => {
+        let tasks = await this.taskGetItems();
+
         return await this.sendRequest('list/get-items', {}, 'get')
             .then(d => {
                 let items = d.data.items;
-                items = items.map(i => ({id: i.id, name: i.name, tasks: []}));
+                items = items.map(i => ({
+                    list_id: i.id,
+                    name: i.name,
+                    tasks: tasks.filter(t => t.list_id === i.id),
+                }));
                 return items;
             })
             .catch(e => {
                 console.log(e);
-                return [];
+                throw 'error';
             });
     };
 
@@ -121,11 +145,9 @@ class ApiService {
 
         return await this.sendRequest('list/create', data, 'post')
             .then(d => {
-                const {id} = d.data.attributes;
-                return {id, name, tasks: []};
+                return d.data.attributes.id;
             })
-            .catch(e => {
-                console.log(e);
+            .catch(() => {
                 return null;
             });
     };

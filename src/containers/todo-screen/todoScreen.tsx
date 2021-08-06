@@ -1,10 +1,10 @@
 import {Layout} from '@ui-kitten/components';
 import {observer} from 'mobx-react';
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {SwitchLine, SwitchLineTaskBack} from '../components/switch-lines';
-import TaskList from '../components/task-list';
-import {todoList} from '../stores/todo';
+import {SwitchLine, SwitchLineTaskBack} from '../../components/switch-lines';
+import TaskList from '../../components/task-list';
+import todoList from '../../stores/todoList';
+import styles from './style';
 
 const TodoScreen = observer(({route}: any) => {
     const {getTodoById} = todoList;
@@ -29,12 +29,6 @@ const TodoScreen = observer(({route}: any) => {
             />
         </Layout>
     );
-});
-
-const styles = StyleSheet.create({
-    area: {
-        height: '100%',
-    },
 });
 
 export default TodoScreen;

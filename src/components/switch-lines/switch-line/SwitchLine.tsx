@@ -1,4 +1,6 @@
+import {useKeyboard} from '@react-native-community/hooks';
 import React, {useState} from 'react';
+import {useEffect} from 'react';
 import SwitchLineFront from '../switch-line-front';
 
 type SwitchLinePropsType = {
@@ -9,6 +11,12 @@ type SwitchLinePropsType = {
 
 const SwitchLine = ({text, action, BackElem}: SwitchLinePropsType) => {
     const [inState, setInState] = useState(true);
+
+    const keyboard = useKeyboard();
+
+    useEffect(() => {
+        setInState(!keyboard.keyboardShown);
+    }, [keyboard.keyboardShown]);
 
     return inState ? (
         <SwitchLineFront text={text} setInState={setInState} />

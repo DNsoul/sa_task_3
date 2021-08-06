@@ -1,10 +1,16 @@
 import {StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
-    content: {
-        paddingHorizontal: 25,
+    layout: {
+        flex: 1,
+        height: '100%',
         width: '100%',
+        paddingTop: 30,
         alignItems: 'center',
+    },
+    image: {
+        width: 400,
+        height: 200,
     },
     button: {
         width: '100%',
@@ -13,7 +19,10 @@ export default StyleSheet.create({
     input: {
         marginBottom: 10,
     },
-    label: {
-        fontWeight: 'bold',
+    link: {
+        color: 'black',
+    },
+    error: {
+        color: 'red',
     },
 });

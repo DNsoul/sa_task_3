@@ -14,6 +14,7 @@ const SingIn = ({onSend}: SingInPropsType) => {
             <Input
                 style={styles.input}
                 onChangeText={setEmail}
+                keyboardType={'email-address'}
                 value={email}
                 label={() => (
                     <Text category="s2" style={styles.label}>
@@ -25,6 +26,7 @@ const SingIn = ({onSend}: SingInPropsType) => {
                 style={styles.input}
                 onChangeText={setPassword}
                 value={password}
+                keyboardType={'default'}
                 secureTextEntry={true}
                 label={() => (
                     <Text category="s2" style={styles.label}>

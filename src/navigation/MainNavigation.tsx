@@ -1,9 +1,9 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
-import ClickIcon from '../components/click-icon';
-import loginScreen from '../containers/loginScreen';
-import TodoListScreen from '../containers/todoListScreen';
-import TodoScreen from '../containers/todoScreen';
+import TodoNavbarButton from '../components/todo-navbar-button';
+import loginScreen from '../containers/login-screen';
+import TodoListScreen from '../containers/todo-list-screen/';
+import TodoScreen from '../containers/todo-screen/';
 
 const Stack = createStackNavigator();
 
@@ -18,16 +18,9 @@ const MainNavigation = () => {
             <Stack.Screen
                 name="TodoList"
                 component={TodoListScreen}
-                options={({navigation}) => ({
+                options={() => ({
                     title: 'Список дел',
-                    headerRight: () => (
-                        <ClickIcon
-                            name="person-outline"
-                            onPress={() => {
-                                navigation.navigate('Login');
-                            }}
-                        />
-                    ),
+                    headerRight: () => <TodoNavbarButton />,
                 })}
             />
             <Stack.Screen

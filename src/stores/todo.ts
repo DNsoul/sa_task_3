@@ -1,5 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {action, makeAutoObservable, runInAction} from 'mobx';
+import {makeAutoObservable, runInAction} from 'mobx';
+import API from '../services/apiService';
 
 export type TaskType = {
     id: string;
@@ -17,21 +17,29 @@ export class Todo {
 
     refr: Function = () => {};
 
-    constructor(list_id: string, name: string, refr: Function) {
+    constructor(
+        list_id: string,
+        name: string,
+        tasks: TaskType[],
+        refr: Function,
+    ) {
         this.list_id = list_id;
         this.name = name;
         this.refr = refr;
+        this.tasks = tasks;
         makeAutoObservable(this);
     }
 
     get getTasks() {
-        this.refr();
         return this.tasks;
     }
 
     addTask = async (name: string, urgency: number) => {
-        const id = '-' + Math.random().toString(36).substr(2, 9);
-        const time = new Date().toUTCString();
+        let id =
+            (await API.taskCreate(name, this.list_id, urgency)) ??
+            '-' + Math.random().toString(36).substr(2, 9);
+
+        const time = new Date().toISOString();
         const data = {
             id,
             list_id: this.list_id,
@@ -44,17 +52,30 @@ export class Todo {
         runInAction(() => {
             this.tasks = [...this.tasks, data];
         });
+        this.refr();
     };
 
-    delTask = (id: string) => {
-        const idx = this.tasks.findIndex(t => t.id === id);
-        this.tasks.splice(idx, 1);
+    delTask = async (id: string) => {
+        await API.taskDelete(id);
+
+        console.log(id);
+
+        runInAction(() => {
+            const idx = this.tasks.findIndex(t => t.id === id);
+            this.tasks.splice(idx, 1);
+        });
+        this.refr();
     };
 
-    toggleTask = (id: string) => {
-        this.tasks = this.tasks.map(t =>
-            t.id === id ? {...t, is_completed: !t.is_completed} : t,
-        );
+    toggleTask = async (id: string) => {
+        //await API.taskPutItems(id, true);
+
+        runInAction(() => {
+            this.tasks = this.tasks.map(t =>
+                t.id === id ? {...t, is_completed: !t.is_completed} : t,
+            );
+        });
+        this.refr();
     };
 
     get getTaskCount() {
@@ -73,104 +94,8 @@ export class Todo {
     }
 
     get getIsNotDone() {
-        console.log(
-            this.getTaskCount === 0 ||
-                this.getCompliteCount < this.getTaskCount,
-        );
         return (
             this.getTaskCount === 0 || this.getCompliteCount < this.getTaskCount
         );
     }
-
-    load = async () => {
-        AsyncStorage.getItem('@taskList')
-            .then(
-                action(tds => {
-                    this.tasks = JSON.parse(tds ?? '[]');
-                }),
-            )
-            .catch(e => {
-                console.log(e);
-            });
-    };
-
-    save = async () => {
-        AsyncStorage.setItem('@taskList', JSON.stringify(this.tasks));
-    };
 }
-
-export class TodoList {
-    todos: Todo[] = [];
-    filter: number = 0;
-
-    constructor() {
-        makeAutoObservable(this);
-    }
-
-    get getTodos() {
-        return this.todos;
-    }
-
-    get getFilter() {
-        return this.filter;
-    }
-
-    refr = () => {
-        runInAction(() => {
-            this.todos = this.todos.slice();
-        });
-    };
-
-    addTodo = async (name: string) => {
-        const id = '-' + Math.random().toString(36).substr(2, 9);
-
-        const todo = new Todo(id, name, this.refr);
-
-        runInAction(() => {
-            this.todos.push(todo);
-        });
-    };
-
-    delTodo = async (id: string) => {
-        const idx = this.todos.findIndex(t => t.list_id === id);
-
-        runInAction(() => {
-            this.todos.splice(idx, 1);
-        });
-    };
-
-    setFilter = (num: number) => {
-        this.filter = num;
-    };
-
-    getTodoById = (list_id: string) => {
-        return (
-            this.todos.find(t => t.list_id === list_id) ??
-            new Todo('', '', this.refr)
-        );
-    };
-
-    clearTodo = () => {
-        this.todos = [];
-    };
-
-    load = async () => {
-        AsyncStorage.getItem('@todoList')
-            .then(
-                action(tds => {
-                    this.todos = JSON.parse(tds ?? '[]');
-                }),
-            )
-            .catch(e => {
-                console.log(e);
-            });
-    };
-
-    save = async () => {
-        AsyncStorage.setItem('@todoList', JSON.stringify(this.todos));
-    };
-}
-
-const todoList = new TodoList();
-
-export {todoList};

@@ -12,9 +12,9 @@ export default StyleSheet.create({
         backgroundColor: '#FCFDFE',
     },
     completeTodo: {
-        backgroundColor: '#EDEFF4',
+        backgroundColor: '#CFCCCC',
     },
     incompleteTodo: {
-        backgroundColor: '#E7F9A6',
+        backgroundColor: '#ADC8FF',
     },
 });
